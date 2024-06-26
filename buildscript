@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#SBATCH -A NAISS2023-3-31 -p alvis
+#SBATCH -N 1 --gpus-per-node=T4:1 
+#SBATCH -t 0-02:00:00
+
+
+# Create a list of each directory containing the sweeps that you want to deploy:
+DIRS=(sweep_r_max_128 sweep_r_max_162 sweep_r_max_306 sweep_r_max_329)
+
+# run using sbatch --array=0-3 script_name !MAKE SURE to refere to the right directory where the models are located.
+apptainer exec nequip.sif nequip-deploy build --train-dir /mimer/NOBACKUP/groups/ltu-fy/Moa/build/${DIRS[$SLURM_ARRAY_TASK_ID]} /mimer/NOBACKUP/groups/ltu-fy/Moa/lammps/models/deployed${SLURM_ARRAY_TASK_ID}.pth
